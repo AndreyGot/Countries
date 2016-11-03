@@ -1,0 +1,5 @@
+guide_countrys:
+    resource: "@GuideCountrysBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
