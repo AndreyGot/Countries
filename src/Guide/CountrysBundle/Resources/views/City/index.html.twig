@@ -3,7 +3,7 @@
 {% block body %}
     <h1>Cities list</h1>
 
-    <table>
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Id</th>
@@ -16,7 +16,11 @@
         <tbody>
         {% for city in cities %}
             <tr>
-                <td><a href="{{ path('city_show', { 'id': city.id }) }}">{{ city.id }}</a></td>
+                <td>
+                    <a  class="btn btn-default" 
+                        href="{{ path('city_show', { 'id': city.id }) }}" 
+                        role="button">{{ city.id }}</a>
+                </td>
                 <td>{{ city.title }}</td>
                 <td>{{ city.countryid }}</td>
                 <td>{{ city.country.title }}</td>
@@ -37,7 +41,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('city_new') }}">Create a new city</a>
+            <a class="btn btn-default" href="{{ path('city_new') }}" role="button">Create a new city</a>
         </li>
     </ul>
 {% endblock %}

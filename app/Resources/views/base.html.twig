@@ -9,8 +9,16 @@
         <link rel="stylesheet" href="{{ asset('components/bootstrap/dist/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('components/angular-ui-select/dist/select.min.css') }}">
         <link rel="stylesheet" href="{{ asset('components/selectize/dist/css/selectize.default.css') }}">
+
+        <style type="text/css">#div1{background-color: grey; padding: 10px;}</style>
     </head>
     <body>
+
+        <div id="div1" align="center">
+            <a class="btn btn-default" href="http://test/app_dev.php" role="button">HOME</a>
+            <a class="btn btn-default" href="http://test/app_dev.php/country" role="button">Link country</a>
+            <a class="btn btn-default" href="http://test/app_dev.php/city" role="button">Link city</a>
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
 

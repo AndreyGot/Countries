@@ -26,7 +26,7 @@ class CityController extends Controller
 
         $cities = $em->getRepository('GuideCountrysBundle:City')->findAll();
 
-        return $this->render('city/index.html.twig', array(
+        return $this->render('GuideCountrysBundle:City:index.html.twig', array(
             'cities' => $cities,
         ));
     }
@@ -51,7 +51,7 @@ class CityController extends Controller
             return $this->redirectToRoute('city_show', array('id' => $city->getId()));
         }
 
-        return $this->render('city/new.html.twig', array(
+        return $this->render('GuideCountrysBundle:City:new.html.twig', array(
             'city' => $city,
             'form' => $form->createView(),
         ));
@@ -67,7 +67,7 @@ class CityController extends Controller
     {
         $deleteForm = $this->createDeleteForm($city);
 
-        return $this->render('city/show.html.twig', array(
+        return $this->render('GuideCountrysBundle:City:show.html.twig', array(
             'city' => $city,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -91,7 +91,7 @@ class CityController extends Controller
             return $this->redirectToRoute('city_edit', array('id' => $city->getId()));
         }
 
-        return $this->render('city/edit.html.twig', array(
+        return $this->render('GuideCountrysBundle:City:edit.html.twig', array(
             'city' => $city,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

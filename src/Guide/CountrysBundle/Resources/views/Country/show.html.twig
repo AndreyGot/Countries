@@ -22,10 +22,11 @@
 
     <ul>
         <li>
-            <a href="{{ path('country_index') }}">Back to the list</a>
+            <a class="btn btn-info" href="{{ path('country_index') }}" role="button">Back to the list</a>
         </li>
         <li>
-            <a href="{{ path('country_edit', { 'id': country.id }) }}">Edit</a>
+            <a  class="btn btn-success" 
+                href="{{ path('country_edit', { 'id': country.id }) }}" role="button">Edit</a>
         </li>
         <li>
             {{ form_start(delete_form) }}

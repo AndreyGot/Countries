@@ -22,10 +22,12 @@
 
     <ul>
         <li>
-            <a href="{{ path('city_index') }}">Back to the list</a>
+            <a class="btn btn-info" href="{{ path('city_index') }}" role="button">Back to the list city</a>
         </li>
         <li>
-            <a href="{{ path('city_edit', { 'id': city.id }) }}">Edit</a>
+            <a class="btn btn-success"
+            href="{{ path('city_edit', { 'id': city.id }) }}" 
+            role="button">Edit</a>
         </li>
         <li>
             {{ form_start(delete_form) }}
