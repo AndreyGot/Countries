@@ -5,12 +5,14 @@ namespace Guide\CountrysBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Country
  *
  * @ORM\Table(name="country")
  * @ORM\Entity(repositoryClass="Guide\CountrysBundle\Repository\CountryRepository")
+ * @JMS\ExclusionPolicy("all")
  */
 class Country
 {
@@ -20,6 +22,7 @@ class Country
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Expose
      */
     private $id;
 
@@ -27,16 +30,19 @@ class Country
      * @var string
      * @Assert\NotBlank(message="title is required.")
      * @ORM\Column(name="title", type="string", length=255)
+     * @JMS\Expose
      */
     private $title;
 
     /**
      * @ORM\Column(name="text", type="text", nullable=true)
+     * @JMS\Expose
      */
     private $text;    
 
     /**
      * @ORM\OneToMany(targetEntity="City", mappedBy="country")
+     * @JMS\Expose
      */
     private $citys;
 
@@ -46,15 +52,6 @@ class Country
     public function __construct()
     {
         $this->citys = new ArrayCollection();
-    }
-
-    public function toArray ()
-    {
-        return array(
-            'id'   => $this->getId(),
-            'title' => $this->getTitle(),
-            'text' => $this->getText()
-            );
     }
 
     public function __toString()

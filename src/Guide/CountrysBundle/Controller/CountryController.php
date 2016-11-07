@@ -3,16 +3,17 @@
 namespace Guide\CountrysBundle\Controller;
 
 use Guide\CountrysBundle\Entity\Country;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Country controller.
  *
  * @Route("country")
  */
-class CountryController extends Controller
+class CountryController extends FOSRestController
 {
     /**
      * Lists all country entities.
@@ -22,20 +23,33 @@ class CountryController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
+        $em        = $this->getDoctrine()->getManager();
         $countries = $em->getRepository('GuideCountrysBundle:Country')->findAll();
-
-        return $this->render('GuideCountrysBundle:Country:index.html.twig', array(
-            'countries' => $countries,
-        ));
+        $view      = $this->view($countries, 200);
+        return $this->handleView($view);
     }
+    // public function indexAction()
+    // {
+    //     $em = $this->getDoctrine()->getManager();
+
+    //     $countries = $em->getRepository('GuideCountrysBundle:Country')->findAll();
+
+    //     return $this->render('GuideCountrysBundle:Country:index.html.twig', array(
+    //         'countries' => $countries,
+    //     ));
+    // }
+
 
     /**
      * Creates a new country entity.
      *
+     * @ApiDoc(
+     *  description="Creates a new country entity",
+     *  input="Guide\CountrysBundle\Form\CountryType",
+     *  output="Guide\CountrysBundle\Entity\Country"
+     * )
      * @Route("/new", name="country_new")
-     * @Method({"GET", "POST"})
+     * @Method("POST")
      */
     public function newAction(Request $request)
     {
@@ -43,34 +57,40 @@ class CountryController extends Controller
         $form = $this->createForm('Guide\CountrysBundle\Form\CountryType', $country);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($Form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($country);
             $em->flush($country);
-
-            return $this->redirectToRoute('country_show', array('id' => $country->getId()));
+            $view      = $this->view($country, 200);
+            return $this->handleView($view);
+            // return $this->redirectToRoute('country_show', array('id' => $country->getId()));
         }
+        $view = $this->view($form, 500);
+        return $this->handleView($view);
 
-        return $this->render('GuideCountrysBundle:Country:new.html.twig', array(
-            'country' => $country,
-            'form' => $form->createView(),
-        ));
+
+        // return $this->render('GuideCountrysBundle:Country:new.html.twig', array(
+        //     'country' => $country,
+        //     'form' => $form->createView(),
+        // ));
     }
 
     /**
      * Finds and displays a country entity.
      *
+     * @ApiDoc(
+     *  description="show a country entity by id",
+     *  output="Guide\CountrysBundle\Entity\Country"
+     * )
      * @Route("/{id}", name="country_show")
      * @Method("GET")
      */
-    public function showAction(Country $country)
+    public function showAction(Request $request, $id)
     {
-        $deleteForm = $this->createDeleteForm($country);
-
-        return $this->render('GuideCountrysBundle:Country:show.html.twig', array(
-            'country' => $country,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $em      = $this->getDoctrine()->getManager();
+        $country = $em->getRepository('GuideCountrysBundle:Country')->findOneById($id);
+        $view = $this->view($country, 200);
+        return $this->handleView($view);
     }
 
     /**

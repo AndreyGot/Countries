@@ -5,12 +5,14 @@ namespace Guide\CountrysBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * City
  *
  * @ORM\Table(name="city")
  * @ORM\Entity(repositoryClass="Guide\CountrysBundle\Repository\CityRepository")
+ * @JMS\ExclusionPolicy("all")
  */
 class City
 {
@@ -20,6 +22,7 @@ class City
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Expose
      */
     private $id;
 
@@ -27,6 +30,7 @@ class City
      * @var string
      * @Assert\NotBlank(message="Name is required.")
      * @ORM\Column(name="title", type="string", length=255)
+     * @JMS\Expose
      */
     private $title;
 

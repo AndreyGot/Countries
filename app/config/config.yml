@@ -64,3 +64,25 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+
+fos_rest:
+    routing_loader:
+        default_format: json
+    format_listener:
+        rules:
+            - { path: '^/country', priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { path: '^/city', priorities: ['json'], fallback_format: json, prefer_extension: false }
+            - { path: ^/, priorities: ['html'], fallback_format: ~, prefer_extension: true }
+    view:
+        templating_formats:
+            json: false
+    view:
+        exception_wrapper_handler:  null
+
+jms_serializer:
+    metadata:
+        directories:
+            FOSUB:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"

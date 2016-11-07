@@ -3,16 +3,16 @@
 namespace Guide\CountrysBundle\Controller;
 
 use Guide\CountrysBundle\Entity\City;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\FOSRestController;
 
 /**
  * City controller.
  *
  * @Route("city")
  */
-class CityController extends Controller
+class CityController extends FOSRestController
 {
     /**
      * Lists all city entities.
@@ -22,13 +22,18 @@ class CityController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
+        $em        = $this->getDoctrine()->getManager();
         $cities = $em->getRepository('GuideCountrysBundle:City')->findAll();
+        $view      = $this->view($cities, 200);
+        $view->setTemplate('GuideCountrysBundle:City:index.html.twig');
+        return $this->handleView($view);
 
-        return $this->render('GuideCountrysBundle:City:index.html.twig', array(
-            'cities' => $cities,
-        ));
+        //
+        // $em = $this->getDoctrine()->getManager();
+        // $cities = $em->getRepository('GuideCountrysBundle:City')->findAll();
+        // return $this->render('GuideCountrysBundle:City:index.html.twig', array(
+        //     'cities' => $cities,
+        // ));
     }
 
     /**

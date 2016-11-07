@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{{ asset('components/bootstrap/dist/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('components/angular-ui-select/dist/select.min.css') }}">
         <link rel="stylesheet" href="{{ asset('components/selectize/dist/css/selectize.default.css') }}">
+        <link rel="stylesheet" href="{{ asset('components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css') }}">
 
         <style type="text/css">#div1{background-color: grey; padding: 10px;}</style>
     </head>
@@ -19,8 +20,10 @@
             <a class="btn btn-default" href="http://test/app_dev.php/country" role="button">Link country</a>
             <a class="btn btn-default" href="http://test/app_dev.php/city" role="button">Link city</a>
         </div>
+
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
+
 
         <script type="text/javascript" src="{{ asset('components/angular/angular.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('components/angular-ui-router/release/angular-ui-ro') }}uter.js"></script>
@@ -30,5 +33,7 @@
         <script type="text/javascript" src="{{ asset('components/restangular/dist/restangular.js') }}"></script>
         <script type="text/javascript" src="{{ asset('components/angular-ui-select/dist/select.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('components/angular-sanitize/angular-sanitize.min.js') }}"></script>
+
+        <script type="text/javascript" src="{{ asset('js/ajax.js') }}"></script>
     </body>
 </html>
