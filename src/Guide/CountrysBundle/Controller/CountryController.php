@@ -4,9 +4,12 @@ namespace Guide\CountrysBundle\Controller;
 
 use Guide\CountrysBundle\Entity\Country;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Country controller.
@@ -17,28 +20,38 @@ class CountryController extends FOSRestController
 {
     /**
      * Lists all country entities.
-     *
-     * @Route("/", name="country_index")
+     * @ApiDoc(
+     *  description="Get list of countries"
+     * )
+     * @Route("", name="country_index")
      * @Method("GET")
      */
     public function indexAction()
     {
         $em        = $this->getDoctrine()->getManager();
         $countries = $em->getRepository('GuideCountrysBundle:Country')->findAll();
-        $view      = $this->view($countries, 200);
+        $view      = $this->view($countries, Response::HTTP_OK);
         return $this->handleView($view);
     }
-    // public function indexAction()
-    // {
-    //     $em = $this->getDoctrine()->getManager();
 
-    //     $countries = $em->getRepository('GuideCountrysBundle:Country')->findAll();
-
-    //     return $this->render('GuideCountrysBundle:Country:index.html.twig', array(
-    //         'countries' => $countries,
-    //     ));
-    // }
-
+    /**
+     * Lists all country entities.
+     * @ApiDoc(
+     *  description="Get list of cities for country"
+     * )
+     * @Route("/list/{id}", name="city_list")
+     * @Method("GET")
+     */
+    public function listCityAction(Request $request, $id)
+    {
+        $em      = $this->getDoctrine()->getManager();
+        $country = $em->getRepository('GuideCountrysBundle:Country')->findOneById($id);
+        if(!$country){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
+        }
+        $view = $this->view($country->getCitys(), Response::HTTP_OK);
+        return $this->handleView($view);
+    }
 
     /**
      * Creates a new country entity.
@@ -57,22 +70,15 @@ class CountryController extends FOSRestController
         $form = $this->createForm('Guide\CountrysBundle\Form\CountryType', $country);
         $form->handleRequest($request);
 
-        if ($Form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($country);
             $em->flush($country);
-            $view      = $this->view($country, 200);
+            $view      = $this->view($country, Response::HTTP_OK);
             return $this->handleView($view);
-            // return $this->redirectToRoute('country_show', array('id' => $country->getId()));
         }
-        $view = $this->view($form, 500);
+        $view = $this->view($form, Response::HTTP_BAD_REQUEST);
         return $this->handleView($view);
-
-
-        // return $this->render('GuideCountrysBundle:Country:new.html.twig', array(
-        //     'country' => $country,
-        //     'form' => $form->createView(),
-        // ));
     }
 
     /**
@@ -89,68 +95,65 @@ class CountryController extends FOSRestController
     {
         $em      = $this->getDoctrine()->getManager();
         $country = $em->getRepository('GuideCountrysBundle:Country')->findOneById($id);
-        $view = $this->view($country, 200);
+        if(!$country){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
+        }
+        $view = $this->view($country, Response::HTTP_OK);
         return $this->handleView($view);
     }
 
     /**
      * Displays a form to edit an existing country entity.
-     *
-     * @Route("/{id}/edit", name="country_edit")
-     * @Method({"GET", "POST"})
+     * @ApiDoc(
+     *  description="Update country entity",
+     *  input="Guide\CountrysBundle\Form\CountryType",
+     *  output="Guide\CountrysBundle\Entity\Country"
+     * )
+     * @Route("/edit/{id}", name="country_edit")
+     * @Method("PUT")
      */
-    public function editAction(Request $request, Country $country)
+    public function editAction(Request $request, $id)
     {
-        $deleteForm = $this->createDeleteForm($country);
-        $editForm = $this->createForm('Guide\CountrysBundle\Form\CountryType', $country);
+        $em      = $this->getDoctrine()->getManager();
+        $country = $em->getRepository('GuideCountrysBundle:Country')->findOneById($id);
+        if(!$country){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
+        }
+
+        $params = array('method' => 'PUT');
+        $editForm = $this->createForm('Guide\CountrysBundle\Form\CountryType', $country, $params);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('country_edit', array('id' => $country->getId()));
+            $em->flush();
+            $view = $this->view($country, Response::HTTP_OK);
+            return $this->handleView($view);
         }
-
-        return $this->render('GuideCountrysBundle:Country:edit.html.twig', array(
-            'country' => $country,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $view = $this->view($editForm, Response::HTTP_BAD_REQUEST);
+        return $this->handleView($view);
     }
 
     /**
      * Deletes a country entity.
      *
+     * @ApiDoc(
+     *  description="Deletes a country entity by id",
+     *  output="Guide\CountrysBundle\Entity\Country"
+     * )
      * @Route("/{id}", name="country_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, Country $country)
+    public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($country);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($country);
-            $em->flush($country);
+        $em      = $this->getDoctrine()->getManager();
+        $country = $em->getRepository('GuideCountrysBundle:Country')->findOneById($id);
+        if(!$country){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
         }
-
-        return $this->redirectToRoute('country_index');
+        $em->remove($country);
+        $em->flush();
+        $view = $this->view($country, Response::HTTP_OK);
+        return $this->handleView($view);
     }
 
-    /**
-     * Creates a form to delete a country entity.
-     *
-     * @param Country $country The country entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Country $country)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('country_delete', array('id' => $country->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
 }
