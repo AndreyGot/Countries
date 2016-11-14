@@ -21,7 +21,8 @@ class CountryController extends FOSRestController
     /**
      * Lists all country entities.
      * @ApiDoc(
-     *  description="Get list of countries"
+     *  description="Get list of countries",
+     *  section = "Country",
      * )
      * @Route("", name="country_index")
      * @Method("GET")
@@ -37,7 +38,8 @@ class CountryController extends FOSRestController
     /**
      * Lists all country entities.
      * @ApiDoc(
-     *  description="Get list of cities for country"
+     *  description="Get list of cities for country",
+     *  section = "Country"
      * )
      * @Route("/list/{id}", name="city_list")
      * @Method("GET")
@@ -58,6 +60,7 @@ class CountryController extends FOSRestController
      *
      * @ApiDoc(
      *  description="Creates a new country entity",
+     *  section = "Country",
      *  input="Guide\CountrysBundle\Form\CountryType",
      *  output="Guide\CountrysBundle\Entity\Country"
      * )
@@ -86,6 +89,7 @@ class CountryController extends FOSRestController
      *
      * @ApiDoc(
      *  description="show a country entity by id",
+     *  section = "Country",
      *  output="Guide\CountrysBundle\Entity\Country"
      * )
      * @Route("/{id}", name="country_show")
@@ -106,6 +110,7 @@ class CountryController extends FOSRestController
      * Displays a form to edit an existing country entity.
      * @ApiDoc(
      *  description="Update country entity",
+     *  section = "Country",
      *  input="Guide\CountrysBundle\Form\CountryType",
      *  output="Guide\CountrysBundle\Entity\Country"
      * )
@@ -138,6 +143,7 @@ class CountryController extends FOSRestController
      *
      * @ApiDoc(
      *  description="Deletes a country entity by id",
+     *  section = "Country",
      *  output="Guide\CountrysBundle\Entity\Country"
      * )
      * @Route("/{id}", name="country_delete")

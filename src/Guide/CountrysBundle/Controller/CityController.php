@@ -4,8 +4,12 @@ namespace Guide\CountrysBundle\Controller;
 
 use Guide\CountrysBundle\Entity\City;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * City controller.
@@ -16,31 +20,31 @@ class CityController extends FOSRestController
 {
     /**
      * Lists all city entities.
-     *
-     * @Route("/", name="city_index")
+     * @ApiDoc(
+     *  description="Get list of countries",
+     *  section = "City",
+     * )
+     * @Route("", name="city_index")
      * @Method("GET")
      */
     public function indexAction()
     {
         $em        = $this->getDoctrine()->getManager();
-        $cities = $em->getRepository('GuideCountrysBundle:City')->findAll();
-        $view      = $this->view($cities, 200);
-        $view->setTemplate('GuideCountrysBundle:City:index.html.twig');
+        $cities    = $em->getRepository('GuideCountrysBundle:City')->findAll();
+        $view      = $this->view($cities, Response::HTTP_OK);
         return $this->handleView($view);
-
-        //
-        // $em = $this->getDoctrine()->getManager();
-        // $cities = $em->getRepository('GuideCountrysBundle:City')->findAll();
-        // return $this->render('GuideCountrysBundle:City:index.html.twig', array(
-        //     'cities' => $cities,
-        // ));
     }
 
     /**
      * Creates a new city entity.
-     *
+     * @ApiDoc(
+     *  description="Creates a new city entity",
+     *  section = "City",
+     *  input="Guide\CountrysBundle\Form\CityType",
+     *  output="Guide\CountrysBundle\Entity\City"
+     * )
      * @Route("/new", name="city_new")
-     * @Method({"GET", "POST"})
+     * @Method("POST")
      */
     public function newAction(Request $request)
     {
@@ -53,89 +57,88 @@ class CityController extends FOSRestController
             $em->persist($city);
             $em->flush($city);
 
-            return $this->redirectToRoute('city_show', array('id' => $city->getId()));
+            $view      = $this->view($city, Response::HTTP_OK);
+            return $this->handleView($view);
         }
 
-        return $this->render('GuideCountrysBundle:City:new.html.twig', array(
-            'city' => $city,
-            'form' => $form->createView(),
-        ));
+        $view = $this->view($form, Response::HTTP_BAD_REQUEST);
+        return $this->handleView($view);
     }
 
     /**
      * Finds and displays a city entity.
-     *
+     * @ApiDoc(
+     *  description="show a city entity by id",
+     *  section = "City",
+     *  output="Guide\CountrysBundle\Entity\City"
+     * )
      * @Route("/{id}", name="city_show")
      * @Method("GET")
      */
-    public function showAction(City $city)
+    public function showAction(Request $request, $id)
     {
-        $deleteForm = $this->createDeleteForm($city);
-
-        return $this->render('GuideCountrysBundle:City:show.html.twig', array(
-            'city' => $city,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $em      = $this->getDoctrine()->getManager();
+        $city = $em->getRepository('GuideCountrysBundle:City')->findOneById($id);
+        if(!$city){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
+        }
+        $view = $this->view($city, Response::HTTP_OK);
+        return $this->handleView($view);
     }
 
     /**
      * Displays a form to edit an existing city entity.
-     *
-     * @Route("/{id}/edit", name="city_edit")
-     * @Method({"GET", "POST"})
+     * @ApiDoc(
+     *  description="Update city entity",
+     *  section = "City",
+     *  input="Guide\CountrysBundle\Form\CityType",
+     *  output="Guide\CountrysBundle\Entity\City"
+     * )
+     * @Route("/edit/{id}", name="city_edit")
+     * @Method("PUT")
      */
-    public function editAction(Request $request, City $city)
+    public function editAction(Request $request, $id)
     {
-        $deleteForm = $this->createDeleteForm($city);
-        $editForm = $this->createForm('Guide\CountrysBundle\Form\CityType', $city);
+        $em   = $this->getDoctrine()->getManager();
+        $city = $em->getRepository('GuideCountrysBundle:City')->findOneById($id);
+        if(!$city){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
+        }
+
+        $params   = array('method' => 'PUT');
+        $editForm = $this->createForm('Guide\CountrysBundle\Form\CityType', $city, $params);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('city_edit', array('id' => $city->getId()));
+            $em->flush();
+            $view = $this->view($city, Response::HTTP_OK);
+            return $this->handleView($view);
         }
-
-        return $this->render('GuideCountrysBundle:City:edit.html.twig', array(
-            'city' => $city,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        $view = $this->view($editForm, Response::HTTP_BAD_REQUEST);
+        return $this->handleView($view);
     }
 
     /**
      * Deletes a city entity.
-     *
+     * @ApiDoc(
+     *  description="Deletes a city entity by id",
+     *  section = "City",
+     *  output="Guide\CountrysBundle\Entity\City"
+     * )
      * @Route("/{id}", name="city_delete")
      * @Method("DELETE")
      */
-    public function deleteAction(Request $request, City $city)
+    public function deleteAction(Request $request, $id)
     {
-        $form = $this->createDeleteForm($city);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($city);
-            $em->flush($city);
+        $em      = $this->getDoctrine()->getManager();
+        $city = $em->getRepository('GuideCountrysBundle:City')->findOneById($id);
+        if(!$city){
+            throw new HttpException(Response::HTTP_NOT_FOUND, "Not found.");
         }
-
-        return $this->redirectToRoute('city_index');
+        $em->remove($city);
+        $em->flush();
+        $view = $this->view($city, Response::HTTP_OK);
+        return $this->handleView($view);
     }
 
-    /**
-     * Creates a form to delete a city entity.
-     *
-     * @param City $city The city entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(City $city)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('city_delete', array('id' => $city->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
 }

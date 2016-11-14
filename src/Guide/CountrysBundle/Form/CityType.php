@@ -5,6 +5,7 @@ namespace Guide\CountrysBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CityType extends AbstractType
 {
@@ -14,9 +15,8 @@ class CityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            // ->add('country_id')
-            ->add('country');
+            ->add('title', TextType::class)
+            ->add('country_id');
     }
     
     /**
@@ -25,7 +25,9 @@ class CityType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Guide\CountrysBundle\Entity\City'
+            'data_class'         => 'Guide\CountrysBundle\Entity\City',
+            'csrf_protection'    => false,
+            'allow_extra_fields' => true,
         ));
     }
 
@@ -34,7 +36,7 @@ class CityType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'guide_countrysbundle_city';
+        return '';
     }
 
 
