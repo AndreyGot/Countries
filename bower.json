@@ -1,6 +1,7 @@
 {
   "name": "Cuntrys",
-  "authors": ["AndreyGot <andreygot88@gmail.com>"
+  "authors": [
+    "AndreyGot <andreygot88@gmail.com>"
   ],
   "ignore": [
     "**/.*",
@@ -23,8 +24,9 @@
     "angular-sanitize": "1.4.9",
     "angular-ui-select": "0.14.2",
     "selectize": "0.12.1",
-    "select2":"3.4.5",
-    "bootstrap":"3.3.6"
+    "select2": "3.4.5",
+    "bootstrap": "3.3.6",
+    "bootstrap-vertical-tabs": "^1.2.1"
   },
   "resolutions": {
     "angular": "~1.2.*"
