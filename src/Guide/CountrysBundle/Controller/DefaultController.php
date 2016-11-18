@@ -15,4 +15,13 @@ class DefaultController extends Controller
         // return $this->render('base.html.twig');
         return $this->render('GuideCountrysBundle:Default:index.html.twig');
     }
+
+    /**
+     * @Route("/about")
+     */
+    public function aboutAction()
+    {
+        // return $this->render('base.html.twig');
+        return $this->render('GuideCountrysBundle:Default:about.html.twig');
+    }
 }

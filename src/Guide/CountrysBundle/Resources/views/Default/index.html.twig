@@ -3,68 +3,68 @@
 
 <div ng-app="guideApp">
   <div ng-controller="countryCtrl">
-{#     <div class="col-xs-3"> <!-- required for floating -->
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs tabs-left">
-          <li ng-repeat="(key, country) in countries" class="">
-                <a href="#">[[country.title]]</a>
-              <span>[[country.text]]</span>
-          </li>
-        </ul>
-    </div>
+    <div class="row" ng-cloak>
 
-    <div class="col-xs-9">
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div class="tab-pane active" id="home">Cities...
-            <div>
-              <button>+ Add city</button>
-            </div>
-            <ul class="nav nav-tabs tabs-left">
-              <li ng-repeat="city in cities"
-                ng-show="!currentCity"
-                id="[[city.id]]">
-                  <a href="">
-                    <span class="glyphicon glyphicon-pencil"
-                      ng-klick="editCity(currentCity)">
-                    </span>
-                    <span class="glyphicon glyphicon-trash"
-                      ng-klick="deleteCity(currentCity)">
-                    </span>
-                    [[city.title]]
-                  </a>
-              </li>
-            </ul>
-          </div>
-          <div class="tab-pane" id="messages">Messages Tab.</div>
-          <div class="tab-pane" id="settings">Settings Tab.</div>
-          <a href="https://github.com/dbtek/bootstrap-vertical-tabs">пимер верстки GitHub</a>
-        </div>
-    </div>  #}
-    <div class="row">
       <div class="col-xs-3">
         <ul class="nav nav-tabs tabs-left">
-          <li ng-repeat="country in countries" class="" ng-class="getTabClass(country.id)" ng-click="setActiveTab(country.id)">
+          <li ng-repeat="country in countries" class="" ng-class="getTabClass(country.id)" ng-click="setActiveTab(country)">
             <a href="#" data-toggle="tab">[[country.title]]</a>
           </li>
         </ul>
       </div>
+
       <div class="col-xs-9">
         <div class="tab-content">
-          <div ng-repeat="country in countries" class="content" ng-class="getTabPaneClass(country.id)">
-            <div class="row" ng-repeat="sity in country.citys">
-              <div class="col-md-12">[[sity.title]]</div>
+            
+          <div>
+            <button ng-click="showForm = !showForm" class="btn btn-info">+ Add city</button>
+            <div ng-show="showForm" ng-if="showForm" ng-init="city={}" class="well">
+              <form>
+                <input type="text" name="title" ng-model="city.title"><br>
+                <button ng-click="saveCity(city)">save</button>
+                <button ng-click="showForm = false">cancel</button>
+              </form>
             </div>
-            [[country.cities]]
-            {# [[getTabPaneContent(country.id)]] #}
+          </div>
+
+          <div ng-repeat="country in countries" class="content" ng-class="getTabPaneClass(country.id)">
+            <div class="row" ng-repeat="city in country.citys">
+              <div class="col-md-12">
+
+                <button ng-click="warningCity(city)" ng-model="city" class="btn btn-danger">
+                  <span class="glyphicon glyphicon-trash"></span>
+                </button>
+                <div class="row" ng-show="city.warning" ng-model="city">
+                  <div class="col-md-4">
+                    <button ng-click="deleteCity(city)" class="btn btn-danger">Ok</button>
+                    <span>City [[city.title]] will by delete</span>
+                  </div>
+                  <div class="col-md-3">
+                    <button ng-click="cancelCity(city)">Cancel</button>
+                  </div>
+                </div>
+                
+                <button ng-click="openCity(city)">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                
+                <div ng-show="city.showFormEdit" class="well">
+                  <form>
+                    <input type="text" name="title" ng-model="city.title"><br>
+                    <button ng-click="editCity(city)">edit</button>
+                    <button ng-click="cancelCity(city)">cancel</button>
+                  </form>
+                </div>
+                
+                [[city.title]]
+              </div>
+            </div>
           </div>
         </div>
-      </div> 
+      </div>
+
     </div>
- 
   </div>
 </div> 
 
 {% endblock %}
-{# ng-repeat="county in country.countries" --- country.countries[1].title #}
-{#               <span>[[]]</span> #}

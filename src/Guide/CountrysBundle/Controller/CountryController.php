@@ -57,7 +57,6 @@ class CountryController extends FOSRestController
 
     /**
      * Creates a new country entity.
-     *
      * @ApiDoc(
      *  description="Creates a new country entity",
      *  section = "Country",
@@ -161,5 +160,4 @@ class CountryController extends FOSRestController
         $view = $this->view($country, Response::HTTP_OK);
         return $this->handleView($view);
     }
-
 }

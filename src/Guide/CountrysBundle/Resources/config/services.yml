@@ -1,4 +1,7 @@
 services:
-#    guide_countrys.example:
-#        class: Guide\CountrysBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  city_type:
+    class: Guide\CountrysBundle\Form\CityType
+    arguments:
+      - "@doctrine.orm.entity_manager"
+    tags:
+      - { name: form.type }

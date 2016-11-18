@@ -56,11 +56,9 @@ class CityController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($city);
             $em->flush($city);
-
             $view      = $this->view($city, Response::HTTP_OK);
             return $this->handleView($view);
         }
-
         $view = $this->view($form, Response::HTTP_BAD_REQUEST);
         return $this->handleView($view);
     }
