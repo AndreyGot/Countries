@@ -26,6 +26,8 @@ class AppKernel extends Kernel
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
 
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+
             new Guide\CountrysBundle\GuideCountrysBundle(),
         );
 
