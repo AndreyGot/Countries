@@ -5,3 +5,25 @@ services:
       - "@doctrine.orm.entity_manager"
     tags:
       - { name: form.type }
+
+  admin.country:
+    class: Guide\CountrysBundle\Admin\CountryAdmin
+    arguments:
+      - ~
+      - Guide\CountrysBundle\Entity\Country
+      - ~
+    tags:
+      - name: sonata.admin
+        manager_type: orm
+        label: "Countries"
+
+  admin.city:
+    class: Guide\CountrysBundle\Admin\CityAdmin
+    arguments:
+      - ~
+      - Guide\CountrysBundle\Entity\City
+      - ~
+    tags:
+      - name: sonata.admin
+        manager_type: orm
+        label: "Cities"

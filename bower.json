@@ -26,7 +26,8 @@
     "selectize": "0.12.1",
     "select2": "3.4.5",
     "bootstrap": "3.3.6",
-    "bootstrap-vertical-tabs": "^1.2.1"
+    "bootstrap-vertical-tabs": "^1.2.1",
+    "sonata-project-admin-bundle": "./vendor/sonata-project/admin-bundle/bower.json"
   },
   "resolutions": {
     "angular": "~1.2.*"
